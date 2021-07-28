@@ -1,0 +1,32 @@
+#include<iostream>
+using namespace std;
+int solve(int a[],int n,int s){
+    int i,j,d=1000,dp[n+1][s+1];
+    for(i=0;i<n+1;i++)
+        dp[i][0]=1;
+    for(i=1;i<s+1;i++)
+        dp[0][i]=0;
+    //Dynamic programming approach for finding minimum difference of 2 subsets
+    for(i=1;i<n+1;i++)
+        for(j=1;j<s+1;j++){
+            dp[i][j]=dp[i-1][j]; //Key formula
+            if(a[i-1]<=j)
+                dp[i][j]|=dp[i-1][j-a[i-1]]; //Key formula
+        }
+    for(j=s/2;j>=0;j--)
+        if(dp[n][j]){
+            d=s-2*j;
+            break;
+        }
+    return d; //returning minimum difference possible between 2 subsets
+}
+int main(){
+    int n,m,i,a[100000],s=0;
+    cin>>n>>m;
+    for(i=0;i<m;i++){
+        cin>>a[i];
+        s+=a[i];
+    }
+    (n==1)?cout<<s:cout<<(s-solve(a,m,s))/2; //if only single length, then sum of all strengths of bricks itself is the answer, or the minimum of 2 subsets.
+    return 0;
+}

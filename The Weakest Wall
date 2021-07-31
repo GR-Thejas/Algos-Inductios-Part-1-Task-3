@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+#include<vector>
+using namespace std;
+
+//to check whether k subsets are possible or not at the sum x 
+bool solve(long long int x,vector<long long int>v,int n,int k){
+
+    long long int r=1,s=0,i;
+    
+    // if sum exceeds x, we increase one subset 
+    // & transfer the current element to this subset
+    for(i=0;i<n;i++){
+        if(s+v[i]<=x)
+            s+=v[i];
+        else{
+            r++;
+            s=v[i];
+        }
+    }
+    
+    // returns true if there are less than 
+    // or equal to k subsets, else false
+    return r<=k; 
+}
+
+
+long long int solve2(long long int s,vector<long long int>v,int n,int k){
+    
+    // left pointer l will surely return false at max-1 
+    // & right pointer r will return true at sum. 
+    long long int l=*max_element(v.begin(),v.end())-1,r=s,m; 
+    
+    //.......00000001111111.........
+    //finds for leftmost true value which is also the least sum possible
+    while(l+1<r){
+        m=(l+r)/2;
+        if(solve(m,v,n,k))
+            r=m;
+        else
+            l=m;
+    }
+    
+    return r; //returns the minimum sum when left pointer exceeds the right pointer 
+    
+}
+int main(){
+
+    long long int n,k,i,u,s=0;
+    vector<long long int>v;
+    
+    cin>>k>>n;
+    
+    for(i=0;i<n;i++){
+        cin>>u;
+        v.push_back(u);
+        s+=u; //computes sum of elements
+    }
+    
+    cout<<solve2(s,v,n,k); //prints r
+    return 0;
+}

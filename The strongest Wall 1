@@ -1,32 +1,51 @@
-#include<iostream>
+#include<bits/stdc++.h>
 using namespace std;
 int solve(int a[],int n,int s){
-    int i,j,d=1000,dp[n+1][s+1];
+    int i,j,dp[n+1][s+1];
+    
+    // when sum is 0, definitely we are excluding 
+    // every element so it is true
+    
     for(i=0;i<n+1;i++)
         dp[i][0]=1;
+    
+    // when we don't include any element, 
+    // sum other than 0 is not possible
+    
     for(i=1;i<s+1;i++)
         dp[0][i]=0;
-    //Dynamic programming approach for finding minimum difference of 2 subsets
+    
+    // Dynamic programming approach for 
+    // finding minimum difference of 2 subsets
+    
     for(i=1;i<n+1;i++)
         for(j=1;j<s+1;j++){
             dp[i][j]=dp[i-1][j]; //Key formula
             if(a[i-1]<=j)
                 dp[i][j]|=dp[i-1][j-a[i-1]]; //Key formula
         }
+    
     for(j=s/2;j>=0;j--)
-        if(dp[n][j]){
-            d=s-2*j;
-            break;
-        }
-    return d; //returning minimum difference possible between 2 subsets
+        if(dp[n][j])
+            return j; //returning the closest possible sum to s/2 (maximize the minimum)
+    
+    return 0;
 }
+
 int main(){
     int n,m,i,a[100000],s=0;
+    
     cin>>n>>m;
+    
     for(i=0;i<m;i++){
         cin>>a[i];
-        s+=a[i];
+        s+=a[i]; //computes sum of array
     }
-    (n==1)?cout<<s:cout<<(s-solve(a,m,s))/2; //if only single length, then sum of all strengths of bricks itself is the answer, or the minimum of 2 subsets.
+    
+    //  if only single length, 
+    //  then sum of all strengths of bricks itself is the answer, 
+    //  or the minimum of 2 subsets.
+    (n==1)?cout<<s:cout<<solve(a,m,s);
+    
     return 0;
 }
